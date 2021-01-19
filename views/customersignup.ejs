@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<style type="text/css">
+    #errorList{
+        display: none;
+        background-color: rgb(255,232,232);
+        padding: 10px 20px;
+        border:2px solid red;
+        font-size:12px;
+    }
+    .error{
+        color:red;
+        font-size: 10px;
+    }
+</style>
+</head>
+<body>
+    <br><br><br>
+    <div class="container bg-success" style="padding:30px 10px 30px 10px;">
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                
+                    <p id="0" class="error" ></p><!--username error -->
+                     <p id="1" class="error" ></p><!-- email error -->
+                    <p id="2" class="error" ></p><!-- pincode error-->
+                    <p id="3" class="error" ></p><!-- mobileerror -->
+                    <p id="4" class="error" ></p><!-- password error -->
+              
+        <input type="text" class="form-control" name="username" placeholder="Username"><br>
+        <input type="text" class="form-control" name="password" placeholder="Password"><br>
+        <input type="text" class="form-control" name="email" placeholder="Email"><br>
+        <input type="text" class="form-control" name="landmark" placeholder="Landmark"><br>
+        <input type="text" class="form-control" name="number" placeholder="Mobile Number"><br>
+        <input type="text" class="form-control" name="address" placeholder="Address"><br>
+        <input type="text" class="form-control" name="pincode" placeholder="Pin Code"><br>
+        <input type="text" class="form-control" name="city" placeholder="City/Town"><br>
+        <input type="text" class="form-control" name="state" placeholder="State"><br><br>
+        <button type="button" onclick="sendData()" class="btn btn-block btn-success">Submit</button>   
+    </div>
+    <div class="col-sm-4"></div>
+  </div>
+</div>
+
+<script>
+
+    function sendData(){
+        var xhttp = new XMLHttpRequest();
+        var form = document.getElementById("form");
+        xhttp.open("POST", "/customers/",true);
+        var password = document.getElementsByName('password')[0].value;
+        var username=document.getElementsByName("username")[0].value;
+        var email =document.getElementsByName("email")[0].value;
+        var landmark =document.getElementsByName("landmark")[0].value;
+        var number =document.getElementsByName("number")[0].value;
+        var address =document.getElementsByName("address")[0].value;
+        var pincode =document.getElementsByName("pincode")[0].value;
+        var city =document.getElementsByName("city")[0].value;
+        var state =document.getElementsByName("state")[0].value; 
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.onload = function(){
+            var errors = this.responseText;
+            console.log(`response from server is of type ${typeof(errors)}`);
+            errors =  JSON.parse(errors);
+            console.log(`after parsing type is ${typeof(errors)}`);
+            errors = errors.errors;
+            console.log(`first error is ${errors[0]}`);
+            for(var i=0;i<errors.length;i++){
+                document.getElementById(i.toString()).innerHTML = errors[i];            
+            }
+        }
+        xhttp.onerror = function(){
+            window.alert("Error occured");
+        }
+        var data = `username=${username}&password=${password}&email=${email}&mobileNumber=${number}&landmark=${landmark}&address=${address}&pincode=${pincode}&city=${city}&state=${state}`;
+        xhttp.send(data);
+    }
+
+</script>
+</body>
+</html>
